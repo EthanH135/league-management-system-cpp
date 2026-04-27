@@ -1,0 +1,248 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+const int TEAM_COUNT = 5;
+const int PLAYERS_PER_TEAM = 5;
+
+struct Player
+{
+    string name;
+    int playerNumber;
+    int playerPoints;
+};
+
+struct Team
+{
+    string teamName;
+    Player players[PLAYERS_PER_TEAM];
+    int teamWins;
+    int teamLosses;
+};
+
+void displayPlayers(Team teams[], int teamCount);
+void displayTeamInfo(Team teams[], int teamCount);
+void displayLeague(Team teams[], int teamCount);
+void updateScore(Team teams[], int teamCount);
+void updateGame(Team teams[], int teamCount);
+
+int main()
+{
+    Team teams[TEAM_COUNT];
+
+    ifstream inFile;
+    inFile.open("league.txt");
+
+    if (!inFile)
+    {
+        cout << "Can't open league.txt" << endl;
+        return 0;
+    }
+
+    for (int i = 0; i < TEAM_COUNT; i++)
+    {
+        inFile >> teams[i].teamName;
+
+        teams[i].teamWins = 0;
+        teams[i].teamLosses = 0;
+
+        for (int j = 0; j < PLAYERS_PER_TEAM; j++)
+        {
+            inFile >> teams[i].players[j].name
+                   >> teams[i].players[j].playerNumber
+                   >> teams[i].players[j].playerPoints;
+        }
+    }
+
+    bool run = true;
+    int choice;
+
+    while (run)
+    {
+        cout << "\n1. Display Player Information" << endl;
+        cout << "2. Display Team Information" << endl;
+        cout << "3. Display League Information" << endl;
+        cout << "4. Update Player Score" << endl;
+        cout << "5. Record Game Result" << endl;
+        cout << "6. Exit" << endl;
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1:
+                displayPlayers(teams, TEAM_COUNT);
+                break;
+
+            case 2:
+                displayTeamInfo(teams, TEAM_COUNT);
+                break;
+
+            case 3:
+                displayLeague(teams, TEAM_COUNT);
+                break;
+
+            case 4:
+                updateScore(teams, TEAM_COUNT);
+                break;
+
+            case 5:
+                updateGame(teams, TEAM_COUNT);
+                break;
+
+            case 6:
+                cout << "Exiting program." << endl;
+                run = false;
+                break;
+
+            default:
+                cout << "Invalid choice." << endl;
+        }
+    }
+
+    inFile.close();
+
+    return 0;
+}
+
+void displayPlayers(Team teams[], int teamCount)
+{
+    string teamName;
+
+    cout << "What is the team name? ";
+    cin >> teamName;
+
+    for (int i = 0; i < teamCount; i++)
+    {
+        if (teams[i].teamName == teamName)
+        {
+            cout << "\nPlayers for " << teams[i].teamName << ":" << endl;
+
+            for (int j = 0; j < PLAYERS_PER_TEAM; j++)
+            {
+                cout << "Name: " << teams[i].players[j].name << endl;
+                cout << "Number: " << teams[i].players[j].playerNumber << endl;
+                cout << "Points: " << teams[i].players[j].playerPoints << endl;
+                cout << endl;
+            }
+
+            return;
+        }
+    }
+
+    cout << "Team not found." << endl;
+}
+
+void displayTeamInfo(Team teams[], int teamCount)
+{
+    string teamName;
+    int totalPoints = 0;
+
+    cout << "What is the team name? ";
+    cin >> teamName;
+
+    for (int i = 0; i < teamCount; i++)
+    {
+        if (teams[i].teamName == teamName)
+        {
+            for (int j = 0; j < PLAYERS_PER_TEAM; j++)
+            {
+                totalPoints += teams[i].players[j].playerPoints;
+            }
+
+            cout << "\nTeam Name: " << teams[i].teamName << endl;
+            cout << "Total Points: " << totalPoints << endl;
+            cout << "Wins: " << teams[i].teamWins << endl;
+            cout << "Losses: " << teams[i].teamLosses << endl;
+
+            return;
+        }
+    }
+
+    cout << "Team not found." << endl;
+}
+
+void displayLeague(Team teams[], int teamCount)
+{
+    cout << "\nLeague Information" << endl;
+
+    for (int i = 0; i < teamCount; i++)
+    {
+        cout << "\nTeam Name: " << teams[i].teamName << endl;
+        cout << "Wins: " << teams[i].teamWins << endl;
+        cout << "Losses: " << teams[i].teamLosses << endl;
+    }
+}
+
+void updateScore(Team teams[], int teamCount)
+{
+    int playerNumber;
+    int pointsScored;
+    string teamName;
+
+    cout << "Player number: ";
+    cin >> playerNumber;
+
+    cout << "Team name: ";
+    cin >> teamName;
+
+    cout << "How many points did the player score? ";
+    cin >> pointsScored;
+
+    for (int i = 0; i < teamCount; i++)
+    {
+        if (teams[i].teamName == teamName)
+        {
+            for (int j = 0; j < PLAYERS_PER_TEAM; j++)
+            {
+                if (teams[i].players[j].playerNumber == playerNumber)
+                {
+                    teams[i].players[j].playerPoints += pointsScored;
+                    cout << "Player score updated." << endl;
+                    return;
+                }
+            }
+        }
+    }
+
+    cout << "Player or team not found." << endl;
+}
+
+void updateGame(Team teams[], int teamCount)
+{
+    string winningTeam;
+    string losingTeam;
+    bool foundWinner = false;
+    bool foundLoser = false;
+
+    cout << "Enter the winning team's name: ";
+    cin >> winningTeam;
+
+    cout << "Enter the losing team's name: ";
+    cin >> losingTeam;
+
+    for (int i = 0; i < teamCount; i++)
+    {
+        if (teams[i].teamName == winningTeam)
+        {
+            teams[i].teamWins++;
+            foundWinner = true;
+        }
+
+        if (teams[i].teamName == losingTeam)
+        {
+            teams[i].teamLosses++;
+            foundLoser = true;
+        }
+    }
+
+    if (foundWinner && foundLoser)
+    {
+        cout << "Game results updated." << endl;
+    }
+    else
+    {
+        cout << "One or both teams were not found." << endl;
+    }
+}
