@@ -1,0 +1,30 @@
+Austin
+Owen 8 0
+Luke 12 1
+Carter 11 0
+Camden 3 2
+Wesley 4 0
+Miami
+Matt 14 0
+Mark 2 1
+John 3 0
+Judas 9 0
+Paul 7 2
+Portland
+Cole 11 0
+Rahil 2 1
+Carl 8 1
+Lenny 14 0
+Moe 4 2
+Atlanta
+Ted 7 1
+Barney 8 0
+Marshall 9 1
+Anthony 2 0
+Andrew 1 0
+Chicago
+Xander 10 0
+Joss 1 0
+Angel 8 1
+Riley 7 2
+Patrick 9 0
